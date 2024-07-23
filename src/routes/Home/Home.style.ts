@@ -22,6 +22,7 @@ export const FormContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    font-size: 1.125rem;
     font-weight: bold;
     color: ${props => props.theme["purple-500"]};
 `
@@ -56,16 +57,19 @@ export const TaskInput = styled(BaseInput)`
 `
 
 export const MinutesInput = styled(BaseInput)`
-    width: 4rem;
+    width: 3rem;
 `
 
 export const CounterContainer = styled.div`
+    font-family: 'Roboto Mono', monospace;
     font-size: 10rem;
     line-height: 8rem;
-    display: flex;
-    gap: 0.5rem;
+    user-select: none;
     color: ${props => props.theme["cream-900"]};
-    flex-wrap: wrap;
+    
+    display: flex;
+    gap: 1rem;
+
 
     span {
         background-color: ${props => props.theme["purple-500"]};
@@ -75,13 +79,14 @@ export const CounterContainer = styled.div`
 `
 
 export const Divider = styled.p`
-    color: ${props => props.theme["purple-500"]};
-    font-size: 12rem;
     padding: 2rem 0;
+    color: ${props => props.theme["purple-500"]};
+
     overflow: hidden;
     display: flex;
     width: 4rem;
     justify-content: center;
+    user-select: none;
 `
 
 export const CountdownButton = styled.button`
@@ -90,9 +95,6 @@ export const CountdownButton = styled.button`
     border: 0;
     border-radius: 8px;
     font-weight: bold;
-
-    color: ${props => props.theme["cream-900"]};
-    background-color: ${props => props.theme["purple-500"]};
 
     display: flex; 
     justify-content: center;
@@ -103,8 +105,22 @@ export const CountdownButton = styled.button`
         opacity: 0.8;
         cursor: not-allowed;
     }
+`
+
+export const StartCountdownButton = styled(CountdownButton)`
+    color: ${props => props.theme["cream-900"]};
+    background-color: ${props => props.theme["purple-500"]};
 
     &:not(:disabled):hover {
         background-color: ${props => props.theme["purple-300"]};
+    }
+`
+
+export const StopCountdownButton = styled(CountdownButton)`
+    color: ${props => props.theme["cream-900"]};
+    background-color: crimson;
+
+    &:not(:disabled):hover {
+        background-color: indianred;
     }
 `

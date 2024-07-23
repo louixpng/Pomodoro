@@ -22,7 +22,6 @@ export const HistoryList = styled.div`
     table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 600px;
         font-size: 0.8rem;
 
         th {

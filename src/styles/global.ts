@@ -10,6 +10,15 @@ export const GlobalStyle = createGlobalStyle`
   :focus {
     outline: none;
   }
+  
+  ::-webkit-scrollbar{
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb{
+    background-color: ${props => props.theme["purple-300"]};
+    border-radius: 10px;
+  }
 
   body, button, input {
     background-color: ${props => props.theme["cream-500"]};
