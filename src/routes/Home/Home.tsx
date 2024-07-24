@@ -8,7 +8,7 @@ import { differenceInSeconds } from 'date-fns';
 const formValidationSchemas = zod.object({
     task: zod.string().min(1, 'Informe a tarefa!'),
     minutesAmount: zod.number()
-        .min(5, 'O ciclo precisa ter pelo menos 5 minutos')
+        .min(1, 'O ciclo precisa ter pelo menos 5 minutos')
         .max(60, 'O ciclo precisa ter no máximo 60 minutos')
 })
 
@@ -19,7 +19,8 @@ interface Cycle {
     task: string,
     minutesAmount: number,
     startDate: Date,
-    interruptedDate?: Date
+    interruptedDate?: Date,
+    finishedDate?: Date
 }
 
 export default function Home() {
@@ -35,19 +36,6 @@ export default function Home() {
     });
 
     const activeCycle = cycles.find((cycles) => cycles.id === activeCycleId)
-
-    useEffect(() => {
-        let interval: number;
-        if (activeCycle) {
-            interval = setInterval(() => {
-                setAmountSecondsPassed(differenceInSeconds(new Date(), activeCycle.startDate))
-            }, 1000)
-        }
-
-        return () => {
-            clearInterval(interval)
-        }
-    }, [activeCycle]);
 
     function handleCreateNewCycle(data: CycleFormData) {
         const id = String(new Date().getTime());
@@ -66,7 +54,7 @@ export default function Home() {
     }
 
     function handleInterruptCycle() {
-        setCycles(cycles.map(cycle => {
+        setCycles((state) => state.map(cycle => {
             if (cycle.id === activeCycleId) {
                 return { ...cycle, interruptedDate: new Date() }
             } else {
@@ -86,10 +74,43 @@ export default function Home() {
     const seconds = String(secondsAmount).padStart(2, '0')
 
     useEffect(() => {
+        let interval: number;
+        if (activeCycle) {
+            interval = setInterval(() => {
+                const secondsDifference = differenceInSeconds(
+                    new Date(), 
+                    activeCycle.startDate
+                )
+                
+                if (secondsDifference >= totalSeconds) {
+                    setCycles((state) => 
+                        state.map(cycle => {
+                        if (cycle.id === activeCycleId) {
+                            return { ...cycle, interruptedDate: new Date() }
+                        } else {
+                            return cycle;
+                        }
+                    }))
+
+                    setAmountSecondsPassed(totalSeconds)
+                    clearInterval(interval)
+                } else {
+                    setAmountSecondsPassed(secondsDifference)
+                }
+
+            }, 1000)
+        }
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [activeCycle, activeCycleId, totalSeconds]);
+
+    useEffect(() => {
         if (activeCycle) {
             document.title = `${minutes}:${seconds} - Cronômetro Online`
         }
-    }, [minutes, seconds])
+    }, [minutes, seconds, activeCycle])
 
     const task = watch('task');
     const minutesAmountWatcher = watch('minutesAmount');
@@ -124,7 +145,7 @@ export default function Home() {
                         id="minutesAmount"
                         placeholder="00"
                         step={5}
-                        min={5}
+                        min={1}
                         {...register('minutesAmount', { valueAsNumber: true })}
                         disabled={!!activeCycle}
                     />
