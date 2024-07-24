@@ -86,7 +86,7 @@ export default function Home() {
                     setCycles((state) => 
                         state.map(cycle => {
                         if (cycle.id === activeCycleId) {
-                            return { ...cycle, interruptedDate: new Date() }
+                            return { ...cycle, finishedDate: new Date() }
                         } else {
                             return cycle;
                         }
